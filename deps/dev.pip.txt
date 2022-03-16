@@ -1,0 +1,7 @@
+-r prod.pip.txt
+-r test.pip.txt
+black
+django-debug-toolbar
+django-extensions
+tox
+tox-gh-actions

@@ -1,0 +1,5 @@
+# This file contains all the production dependencies except Django itself.
+# This way we can easily test against multiple Django versions.
+django-environ
+django-redis
+pillow

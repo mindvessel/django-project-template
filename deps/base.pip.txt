@@ -1,5 +1,9 @@
-# This file contains all the production dependencies except Django itself.
-# This way we can easily test against multiple Django versions.
-django-environ
-django-redis
-pillow
+celery >= 5.2
+django >= 3.2
+# First version to support Django 4.x
+django-environ >= 0.9.0
+# django-redis needed until django-environ supports new django.core.cache.RedisCache
+django-redis >= 5.2.0
+gunicorn[setproctitle] >= 20.1.0
+redis[hiredis] >= 4.4.2
+pillow >= 9.4.0

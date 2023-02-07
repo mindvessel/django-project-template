@@ -76,7 +76,7 @@ STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesSto
 # CELERY_TASK_ALWAYS_EAGER=False in your environment to actually use celery.
 CELERY_TASK_ALWAYS_EAGER = env("CELERY_TASK_ALWAYS_EAGER", default=True)
 CELERY_TASK_EAGER_PROPAGATES = env("CELERY_TASK_EAGER_PROPAGATES", default=True)
-CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/7")
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/1")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="")
 CELERY_TIME_ZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
@@ -89,6 +89,7 @@ WSGI_APPLICATION = "{{ project_name }}.wsgi.application"
 ROOT_URLCONF = "{{ project_name }}.urls"
 
 INSTALLED_APPS = [
+    "django_celery_beat",
     # Core Django below custom so we can override their templates
     "django.contrib.admin",
     "django.contrib.auth",

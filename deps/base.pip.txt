@@ -1,5 +1,6 @@
 celery >= 5.2
 django >= 3.2
+django-celery-beat >= 2.4.0
 # First version to support Django 4.x
 django-environ >= 0.9.0
 # django-redis needed until django-environ supports new django.core.cache.RedisCache

@@ -3,8 +3,8 @@
 # Based on the Taskfile format from https://github.com/adriancooney/Taskfile
 # Please keep functions sorted alphabetically for ease of future editing.
 
-# For the moment we are targeting 3.9
-BASEPYTHON=`which python3.9 || which python3 || which python`
+# Assuming Ubuntu 22.04 LTS
+BASEPYTHON=`which python3.10 || which python3 || which python`
 BASE_DIR=$(cd `dirname "$0"`; pwd)
 PROJECT_NAME=`basename "$BASE_DIR"`
 PYTHON="$BASE_DIR/venv/bin/python"
@@ -13,9 +13,12 @@ function bootstrap {
     setup_virtualenv
     # Create a default .env file for dev
     [ ! -e "$BASE_DIR/.env" ] && cp $BASE_DIR/example.env $BASE_DIR/.env
-    # Make sure there's a var dir for tmp files.
-    [ ! -d "$BASE_DIR/var" ] && mkdir -p "$BASE_DIR/var"
+    # The settings file should ensure there's a var dir when manage.py runs.
     $PYTHON $BASE_DIR/manage.py migrate
+    # This should only be needed once: turn on WAL mode for better concurrency
+    SQLITE=`which sqlite3`
+    DBFILE="$BASE_DIR/var/db/db.sqlite3"
+    [ -n "$SQLITE" ] && [ -e "$DBFILE" ] && $SQLITE $DBFILE 'PRAGMA journal_mode=WAL;'
 }
 
 function default {

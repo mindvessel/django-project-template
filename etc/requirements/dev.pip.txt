@@ -3,6 +3,7 @@
 black
 django-debug-toolbar
 django-extensions
+isort >= 5.12.0
 pip-tools
 tox
 tox-gh-actions

@@ -15,7 +15,7 @@ dev_reqs = PROJECT_DIR / "requirements-dev.txt"
 base_reqs = PROJECT_DIR / "requirements.txt"
 
 
-def get_django_package():
+def get_django_package() -> str:
     """A simple hueristic to find the main package for this Django project."""
     for item in PROJECT_DIR.iterdir():
         if not item.is_dir():
@@ -32,14 +32,14 @@ def get_django_package():
     )
 
 
-def get_python_binary_from(VENV: Path):
+def get_python_binary_from(VENV: Path) -> str:
     for maybe in [VENV / "bin" / "python", VENV / "Scripts" / "python.exe"]:
         if maybe.exists():
-            return maybe
+            return str(maybe)
     raise Exception(f"Unable to locate Python binary in {VENV}")
 
 
-def in_virtualenv():
+def in_virtualenv() -> bool:
     """Return true if running inside a virtualenv"""
     return sys.prefix != sys.base_prefix
 
@@ -55,7 +55,7 @@ def create_venv(
     return get_python_binary_from(path)
 
 
-def _compile(PYTHON, *args):
+def _compile(PYTHON: str, *args):
     cmd = [
         PYTHON,
         "-m",
@@ -69,13 +69,13 @@ def _compile(PYTHON, *args):
     subprocess.check_call(cmd, cwd=str(PROJECT_DIR))
 
 
-def _pip(PYTHON, *args):
+def _pip(PYTHON: str, *args):
     cmd = [PYTHON, "-m", "pip", "-q"]
     cmd.extend(args)
     subprocess.check_call(cmd, cwd=str(PROJECT_DIR))
 
 
-def _sync(PYTHON, *args):
+def _sync(PYTHON: str, *args):
     cmd = [PYTHON, "-m", "piptools", "sync", "-q"]
     cmd.extend(args)
     subprocess.check_call(cmd, cwd=str(PROJECT_DIR))
@@ -89,7 +89,7 @@ class Commands:
     """
 
     @staticmethod
-    def devsetup(pkg, args):
+    def devsetup(pkg: str, args: T.Iterable):
         # First, ensure we have a virtualenv and know where it is
         VENV = PROJECT_DIR / ".venv"
         if in_virtualenv():
@@ -127,7 +127,7 @@ class Commands:
         print("  python manage.py migrate")
 
     @staticmethod
-    def pipsync(pkg, args):
+    def pipsync(pkg: str, args: T.Iterable):
         if not in_virtualenv():
             print("Activate your virtual environment before running this command.")
             exit(1)
@@ -142,10 +142,6 @@ class Commands:
         _compile(PYTHON, "-o", str(dev_reqs), *args, str(dev_in))
         print("Updating the current virtual environment.")
         _sync(PYTHON, str(dev_reqs))
-
-    @staticmethod
-    def upgrade_requirements(pkg, args):
-        Commands.pipsync(pkg, args=["--upgrade"])
 
 
 def django_command():

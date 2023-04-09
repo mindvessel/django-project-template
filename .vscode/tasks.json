@@ -5,9 +5,8 @@
   "tasks": [
     {
       "label": "Django Shell",
-      "type": "process",
-      "command": "${command:python.interpreterPath}",
-      "args": ["manage.py", "shell_plus"],
+      "type": "shell",
+      "command": "${command:python.interpreterPath} manage.py shell_plus",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -15,9 +14,8 @@
     },
     {
       "label": "Upgrade Requirements",
-      "type": "process",
-      "command": "${command:python.interpreterPath}",
-      "args": ["manage.py", "pipsync", "--upgrade"],
+      "type": "shell",
+      "command": "${command:python.interpreterPath} manage.py pipsync --upgrade",
       "options": {
         "cwd": "${workspaceFolder}"
       },

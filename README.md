@@ -99,8 +99,8 @@ I will accept pull requests that add support for other editors, within reason.
 ### Copyright License
 
 Source code in this template is derived from Django's project template. Django does not
-include license information in generated projects, but Django itself is licensed under
-the [BSD 3-Clause License](https://choosealicense.com/licenses/bsd-3-clause/).
+include license information in generated projects, but Django itself is licensed under a
+[BSD 3-Clause License](https://github.com/django/django/blob/main/LICENSE).
 
 Source code modifications provided as part of this template are licensed under the same
 terms as would be applied to the standard output of Django's `startproject` command.

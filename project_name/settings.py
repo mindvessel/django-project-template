@@ -140,7 +140,9 @@ STORAGES = {
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-SQLITE_DB = DATA_DIR / "db.sqlite3"
+DB_DIR = DATA_DIR / "db"
+DB_DIR.mkdir(parents=True, exist_ok=True)
+SQLITE_DB = DB_DIR / "db.sqlite3"
 DATABASES = {"default": env.db("DATABASE_URL", default=f"sqlite:///{SQLITE_DB}")}
 
 CACHES = {"default": env.cache("CACHE_URL", default="locmemcache://")}

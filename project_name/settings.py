@@ -8,7 +8,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 
 
-See also https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
+See also https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 """
 from pathlib import Path

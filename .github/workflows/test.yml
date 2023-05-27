@@ -6,7 +6,7 @@ on:
 
 jobs:
   run_tests:
-    if: ${{ github.repository != 'veselosky/django-project-template' }}
+    if: ${{ github.repository != 'mindvessel/django-project-template' }}
     runs-on: ubuntu-22.04
     strategy:
       matrix:

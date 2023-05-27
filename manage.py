@@ -81,6 +81,32 @@ def _sync(PYTHON: str, *args):
     subprocess.check_call(cmd, cwd=str(PROJECT_DIR))
 
 
+def _compile_and_sync(PYTHON: str, args: T.Iterable):
+    """Run pip-compile on requirements.in and requirements-dev.in, then pip-sync"""
+    # Ensure pip and piptools are up to date in the venv
+    print("Checking for the latest pip updates.")
+    _pip(PYTHON, "install", "--upgrade", "pip", "pip-tools")
+
+    # Then, use piptools sync to install requirements
+    print("Checking for requirements changes.")
+    _compile(
+        PYTHON,
+        "-o",
+        str(base_reqs.relative_to(PROJECT_DIR)),
+        *args,
+        str(base_in.relative_to(PROJECT_DIR)),
+    )
+    _compile(
+        PYTHON,
+        "-o",
+        str(dev_reqs.relative_to(PROJECT_DIR)),
+        *args,
+        str(dev_in.relative_to(PROJECT_DIR)),
+    )
+    print("Updating the current virtual environment.")
+    _sync(PYTHON, str(dev_reqs))
+
+
 class Commands:
     """
     This class is a container for commands that are not part of Django, but that we want
@@ -106,13 +132,7 @@ class Commands:
         print(f"Using virtual environment in {VENV}")
 
         print("Installing dependencies. May take a bit. Grab a coffee.")
-        # Next, ensure pip and piptools are up to date in the venv
-        _pip(PYTHON, "install", "--upgrade", "pip", "pip-tools")
-
-        # Then, use piptools sync to install requirements
-        _compile(PYTHON, "-o", str(base_reqs), str(base_in))
-        _compile(PYTHON, "-o", str(dev_reqs), str(dev_in))
-        _sync(PYTHON, str(dev_reqs))
+        _compile_and_sync(PYTHON, args)
 
         # Finally, make sure we have .env file
         # If no .env, copy example.env to .env
@@ -132,16 +152,7 @@ class Commands:
             print("Activate your virtual environment before running this command.")
             exit(1)
         PYTHON = sys.executable
-        # Ensure pip and piptools are up to date in the venv
-        print("Checking for the latest pip updates.")
-        _pip(PYTHON, "install", "--upgrade", "pip", "pip-tools")
-
-        # Then, use piptools sync to install requirements
-        print("Checking for requirements changes.")
-        _compile(PYTHON, "-o", str(base_reqs), *args, str(base_in))
-        _compile(PYTHON, "-o", str(dev_reqs), *args, str(dev_in))
-        print("Updating the current virtual environment.")
-        _sync(PYTHON, str(dev_reqs))
+        _compile_and_sync(PYTHON, args)
 
 
 def django_command():

@@ -2,12 +2,9 @@
   "[python]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "always"
     },
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "charliermarsh.ruff"
   },
-  "isort.importStrategy": "fromEnvironment",
-  "isort.args": ["--profile", "black"],
-  "python.analysis.autoImportCompletions": true,
-  "python.formatting.provider": "none"
+  "python.analysis.autoImportCompletions": true
 }

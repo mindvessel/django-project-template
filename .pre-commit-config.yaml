@@ -22,7 +22,7 @@ repos:
       - id: no-commit-to-branch
 
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: '1.29.1'
+    rev: '1.32.0'
     hooks:
       - id: django-upgrade
         args: ['--target-version', '6.0']
@@ -35,7 +35,7 @@ repos:
 
   # Run the Ruff linter.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.16.7
     hooks:
       # Linter
       - id: ruff
@@ -44,13 +44,13 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/Riverside-Healthcare/djLint
-    rev: v1.36.4
+    rev: v1.46.1
     hooks:
       - id: djlint-reformat-django
       - id: djlint-django
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.24.1
+    rev: '0.26'
     hooks:
       - id: validate-pyproject
         # Optional extra validations from SchemaStore:

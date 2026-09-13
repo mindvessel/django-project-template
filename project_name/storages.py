@@ -46,8 +46,11 @@ def heroku_build_commit():
     return RELEASE_ID
 
 
-# Custom static files storage that stores the manifest file in a unique subdirectory.
 class ReleaseSpecificManifestLocalStorage(ManifestStaticFilesStorage):
+    """Custom static files storage that stores the manifest file in a unique path
+    based on the release ID.
+    """
+
     def __init__(self, *args, **kwargs):
         # Determine the release ID to use for the manifest file location.
         release_id = kwargs.pop("release_id", None)
@@ -71,6 +74,10 @@ try:
     from storages.backends.s3 import S3ManifestStaticStorage, S3StaticStorage
 
     class ReleaseSpecificManifestS3Storage(S3ManifestStaticStorage):
+        """Custom static files storage that stores the manifest file in a unique path
+        based on the release ID for S3 storage.
+        """
+
         def __init__(self, *args, **kwargs):
             # Determine the release ID to use for the manifest file location.
             release_id = kwargs.pop("release_id", None)

@@ -186,8 +186,11 @@ if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
 
 CACHES = {"default": env.cache("CACHE_URL", default="locmemcache://")}
 
-# Email settings don't use a dict. Add to local vars instead.
-# https://django-environ.readthedocs.io/en/latest/#email-settings
+# NOTE: Django 6.1 introduced the MAILERS settings for configuring email backends.
+# https://docs.djangoproject.com/en/6.1/howto/mailers-migration/#migrating-to-mailers
+# That format is not yet supported by django-environ (as of 0.14), so for now we
+# continue to use the old EMAIL_BACKEND and related settings, which are supported until
+# Django 2028.
 EMAIL_CONFIG = env.email_url("EMAIL_URL", default="consolemail://")
 vars().update(EMAIL_CONFIG)
 

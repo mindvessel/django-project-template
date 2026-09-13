@@ -110,6 +110,8 @@ SECURE_SSL_REDIRECT = False
 if env.bool("USE_TLS", default=False):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Local data written by the app should be kept in one directory for ease of backup.
 # In DEV this can be a subdir of BASE_DIR. In production, for single-server setups

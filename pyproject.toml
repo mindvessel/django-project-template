@@ -1,11 +1,11 @@
 [project]
 name = "django-project-template"
 version = "6.0.0"
-description = "A Django 6.0 project template"
+description = "A Django project template"
 requires-python = ">=3.12"
 dependencies = [
     "django>=6.0,<7.0",
-    "django-environ>=0.12.0",
+    "django-environ>=0.13.0",
     "django-extensions>=4.1",
     "docutils>=0.22.4",
     "pillow>=12.1.0",
@@ -51,6 +51,6 @@ ignore = [
 "manage.py" = ["E402"]
 "*/celery.py" = ["T201"]  # Allow print in debug tasks
 
-[tool.ruff.lint.isort]
+# [tool.ruff.lint.isort]
 # Replace "project_name" with the actual project package name
-known-first-party = ["project_name"]
+# known-first-party = ["project_name"]

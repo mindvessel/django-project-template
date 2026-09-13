@@ -1,4 +1,4 @@
-# Control-Escape Project Template for Django 6.0
+# Control-Escape Project Template for Django 6.1
 
 Replace this README file with your own project's info.
 
@@ -66,7 +66,7 @@ dependency management file.
 This template includes a `pyproject.toml` for dependency management, with the following
 dependencies:
 
-- **Django 6.0.x** – This template is specifically designed for Django 6.0. For other versions, use
+- **Django 6.1.x** – This template is specifically designed for Django 6.1. For other versions, use
   the appropriate version of this template from its corresponding branch or tag (e.g. django5.2).
 - **Pillow** – For ImageField support.
 - **docutils** – For Django Admin Docs support (which is enabled by default in this

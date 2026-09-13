@@ -206,7 +206,7 @@ if find_spec("django_celery_beat") is not None:
     INSTALLED_APPS.append("django_celery_beat")
 
 #######################################################################################
-# SECTION: LOGGING CONFIGURATION
+# LOGGING CONFIGURATION
 #######################################################################################
 # A logging configuration suitable for production.
 LOG_DIR = env.path("LOG_DIR", default=DATA_DIR / "logs")

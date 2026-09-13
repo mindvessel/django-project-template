@@ -99,7 +99,7 @@ if DOTENV.exists() and not env.bool("IGNORE_ENV_FILE", default=False):
 # insecure configuration in production.
 SECRET_KEY = env.str("SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=list)
 
 # If running behind a reverse proxy that terminates SSL for you, you need to set
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -116,7 +116,7 @@ if env.bool("USE_TLS", default=False):
 # this should be a directory outside BASE_DIR that is backed up on a regular basis.
 # For scalable configurations, you should not use local paths but external services
 # like S3 and a dedicated database server.
-DATA_DIR = Path(env.path("DATA_DIR", default=BASE_DIR.joinpath("var")))
+DATA_DIR = Path(env.str("DATA_DIR", default=str(BASE_DIR.joinpath("var"))))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
@@ -209,7 +209,7 @@ if find_spec("django_celery_beat") is not None:
 # LOGGING CONFIGURATION
 #######################################################################################
 # A logging configuration suitable for production.
-LOG_DIR = env.path("LOG_DIR", default=DATA_DIR / "logs")
+LOG_DIR = Path(env.str("LOG_DIR", default=str(DATA_DIR.joinpath("logs"))))
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 LOGGING = {

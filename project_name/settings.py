@@ -20,7 +20,7 @@ import environ
 PROJECT = __name__.split(".")[0]
 
 #######################################################################################
-# SECTION 0: Application definition, settings that should not vary between environments
+# COMPOSITION: Application definition, settings that should not vary between environments
 #######################################################################################
 WSGI_APPLICATION = f"{PROJECT}.wsgi.application"
 ROOT_URLCONF = f"{PROJECT}.urls"
@@ -82,7 +82,7 @@ USE_I18N = True
 USE_TZ = True
 
 #######################################################################################
-# SECTION 1: Settings that can (and maybe should) differ between environments
+# ENVIRONMENT: Settings that can (and maybe should) differ between environments
 #######################################################################################
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -91,15 +91,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Get environment settings
 env = environ.Env()
 DOTENV = BASE_DIR / ".env"
-if DOTENV.exists() and not env("IGNORE_ENV_FILE", default=False):
+if DOTENV.exists() and not env.bool("IGNORE_ENV_FILE", default=False):
     environ.Env.read_env(DOTENV)
 
 # SECRET_KEY intentionally has no default, and will error if not provided
 # in the environment. This ensures you don't accidentally run with an
 # insecure configuration in production.
-SECRET_KEY = env("SECRET_KEY")
-DEBUG = env("DEBUG", default=False)
-ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[])
+SECRET_KEY = env.str("SECRET_KEY")
+DEBUG = env.bool("DEBUG", default=False)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 # If running behind a reverse proxy that terminates SSL for you, you need to set
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -116,7 +116,7 @@ if env.bool("USE_TLS", default=False):
 # this should be a directory outside BASE_DIR that is backed up on a regular basis.
 # For scalable configurations, you should not use local paths but external services
 # like S3 and a dedicated database server.
-DATA_DIR = Path(env("DATA_DIR", default=BASE_DIR.joinpath("var")))
+DATA_DIR = Path(env.path("DATA_DIR", default=BASE_DIR.joinpath("var")))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
@@ -129,20 +129,29 @@ MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # Javascript / CSS assets being served from cache.
-# See https://docs.djangoproject.com/en/6.0/ref/contrib/staticfiles/#manifeststaticfilesstorage
-# But for production, you almost certainly should be using a shared storage backend, like:
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+# But for production, you almost certainly should be using a shared object storage
+# backend. This article explains the options and the gotchas (with sample source):
+# https://www.control-escape.com/web/django-staticfiles/
+RELEASE_ID = env.str("RELEASE_ID", default="")
+RELEASE_ID_STRATEGY = env.str(
+    "RELEASE_ID_STRATEGY", default=f"{PROJECT}.storages.git_hash"
+)
+STATIC_OPTS = {
+    "release_id": RELEASE_ID,
+    "release_id_strategy": RELEASE_ID_STRATEGY,
+}
 STORAGES = {
     "default": {
-        "BACKEND": env(
+        "BACKEND": env.str(
             "DEFAULT_STORAGE", default="django.core.files.storage.FileSystemStorage"
         ),
     },
     "staticfiles": {
-        "BACKEND": env(
+        "BACKEND": env.str(
             "STATICFILES_STORAGE",
-            default="django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+            default=f"{PROJECT}.storages.ReleaseSpecificManifestLocalStorage",
         ),
+        "OPTIONS": STATIC_OPTS,
     },
 }
 
@@ -185,11 +194,11 @@ vars().update(EMAIL_CONFIG)
 # If the environment has not provided settings, assume there is no broker
 # and run celery tasks in-process. This means you MUST provide
 # CELERY_TASK_ALWAYS_EAGER=False in your environment to actually use celery.
-CELERY_TASK_ALWAYS_EAGER = env("CELERY_TASK_ALWAYS_EAGER", default=True)
-CELERY_TASK_EAGER_PROPAGATES = env("CELERY_TASK_EAGER_PROPAGATES", default=True)
+CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER", default=True)
+CELERY_TASK_EAGER_PROPAGATES = env.bool("CELERY_TASK_EAGER_PROPAGATES", default=True)
 # For development setup, assume default of local redis.
-CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/1")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="")
+CELERY_BROKER_URL = env.str("CELERY_BROKER_URL", default="redis://localhost:6379/1")
+CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND", default="")
 CELERY_TIME_ZONE = TIME_ZONE
 
 if find_spec("django_celery_beat") is not None:
@@ -197,10 +206,10 @@ if find_spec("django_celery_beat") is not None:
     INSTALLED_APPS.append("django_celery_beat")
 
 #######################################################################################
-# SECTION: LOGGING CONFIGURATION
+# LOGGING CONFIGURATION
 #######################################################################################
 # A logging configuration suitable for production.
-LOG_DIR = env("LOG_DIR", default=DATA_DIR / "logs")
+LOG_DIR = env.path("LOG_DIR", default=DATA_DIR / "logs")
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 LOGGING = {
@@ -331,7 +340,7 @@ if DEBUG:
     LOGGING = DEBUG_LOGGING
 
 #######################################################################################
-# SECTION 2: DEVELOPMENT: If running in a dev environment, loosen restrictions
+# DEVELOPMENT: If running in a dev environment, loosen restrictions
 # and add debugging tools.
 #######################################################################################
 
@@ -349,3 +358,7 @@ if DEBUG:
             "127.0.0.1",
         ]
         # See also urls.py for debug_toolbar urls
+
+    if find_spec("django_removals") is not None:
+        # Warns about settings deprecated in future versions of Django.
+        INSTALLED_APPS.append("django_removals")

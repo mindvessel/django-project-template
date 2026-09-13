@@ -5,9 +5,9 @@ Replace this README file with your own project's info.
 ## How to use it
 
 To use this repository as a project template for Django, use the following command to
-create your Django project, replacing URL and PROJECT_NAME:
+create your Django project, replacing PROJECT_NAME with your own:
 
-    django-admin startproject --template URL -x .git PROJECT_NAME
+    django-admin startproject --template https://github.com/veselosky/django-project-template/archive/refs/heads/main.zip -x .git PROJECT_NAME
 
 OR simply create a new repository
 [using this repository as a template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template),
@@ -25,21 +25,19 @@ After creating your project, set up your development environment:
 
 2. Create a virtual environment and install dependencies:
    ```bash
-   uv venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   uv pip install -r pyproject.toml --extra dev
+   uv sync
    ```
 
 3. Copy `example.env` to `.env` and configure your environment variables.
 
 4. Run migrations:
    ```bash
-   python manage.py migrate
+   uv run python manage.py migrate
    ```
 
 5. (Optional) Install pre-commit hooks:
    ```bash
-   pre-commit install
+   uv run pre-commit install
    ```
 
 ## Why to use it
@@ -105,9 +103,6 @@ using Github Actions. It implements a testing matrix using
 [tox](https://tox.wiki/en/latest/) allowing you to test against multiple versions of
 Python (3.12–3.14). Out of the box, the test automation checks for common
 errors, missing database migrations, and invalid template syntax.
-
-The testing matrix also includes informational tests against Django 6.0, but these tests
-are not run by default and are allowed to fail without breaking the build.
 
 ### Editors
 
